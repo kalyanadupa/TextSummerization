@@ -125,7 +125,7 @@ public class CosineSimilarity {
                 }            
         }
         
-        PrintWriter writer = new PrintWriter("StringNearNum.edges", "UTF-8");
+//        PrintWriter writer = new PrintWriter("StringNearNum.edges", "UTF-8");
 //        for(int i =0;i < (allStrings.size());i++){
 //            for(int j = i; j<(allStrings.size());j++){
 //                double sim = cs1.CosineSimilarity_Score(allStrings.get(i), allStrings.get(j));
@@ -141,14 +141,10 @@ public class CosineSimilarity {
 //                    //writer.println(i+" "+j+" "+ (float)sim);
 //            }
 //        }
+        PrintWriter writer = new PrintWriter("StringNum.edges", "UTF-8");        
         for(int i =0;i < (allStrings.size());i++){
             for(int j = i; j<(allStrings.size());j++){
                 double sim = cs1.CosineSimilarity_Score(allStrings.get(i), allStrings.get(j));
-                sim = 1 - sim;
-                if(sim == 1)
-                    sim = 0;
-                else if(sim == 0)
-                    sim = 0.01;
                 sim = sim*100;
                 int num = (int) sim;
                 if((i != j)&&(sim != 0)&&(!Double.isNaN(sim))&&(num != 0))
