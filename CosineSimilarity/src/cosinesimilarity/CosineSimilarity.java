@@ -12,7 +12,11 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.Hashtable;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -21,7 +25,9 @@ import java.util.List;
  * @author Kalyan
  */
 public class CosineSimilarity {
-    
+
+    static HashMap<Integer,String> map = new HashMap<Integer,String>();
+    static List<Integer> nodeWord = new ArrayList<Integer>();
     public class values {
 
         int val1;
@@ -104,6 +110,37 @@ public class CosineSimilarity {
 
         return (sim_score);
     }
+    
+    public static LinkedHashMap sortHashMapByValuesD(HashMap passedMap) {
+        List mapKeys = new ArrayList(passedMap.keySet());
+        List mapValues = new ArrayList(passedMap.values());
+        Collections.sort(mapValues);
+        Collections.sort(mapKeys);
+
+        LinkedHashMap sortedMap = new LinkedHashMap();
+
+        Iterator valueIt = mapValues.iterator();
+        while (valueIt.hasNext()) {
+            Object val = valueIt.next();
+            Iterator keyIt = mapKeys.iterator();
+
+            while (keyIt.hasNext()) {
+                Object key = keyIt.next();
+                String comp1 = passedMap.get(key).toString();
+                String comp2 = val.toString();
+
+                if (comp1.equals(comp2)) {
+                    passedMap.remove(key);
+                    mapKeys.remove(key);
+                    sortedMap.put((String) key, (Double) val);
+                    break;
+                }
+
+            }
+
+        }
+        return sortedMap;
+    }    
 
     public static void main(String[] args) throws FileNotFoundException, IOException {
         CosineSimilarity cs1 = new CosineSimilarity();
@@ -114,16 +151,22 @@ public class CosineSimilarity {
         BufferedReader in = null;
         int idx = 0;
         String s = null;
+        
         for (File f : allfiles) {
                 in = new BufferedReader(new FileReader(f));
                 while ((s = in.readLine()) != null) {
                     if(s.compareTo("") != 0){
                         allStrings.add(s);
+                        String[] count = s.split(" ");
+                        System.out.println("idx => "+ count.length);
+                        map.put(idx, s);
+                        nodeWord.add(count.length);
                         out.println(idx + " " + s);
                         idx++;
                     }
                 }            
         }
+        //map = sortHashMapByValuesD(map);
         
 //        PrintWriter writer = new PrintWriter("StringNearNum.edges", "UTF-8");
 //        for(int i =0;i < (allStrings.size());i++){
@@ -141,15 +184,18 @@ public class CosineSimilarity {
 //                    //writer.println(i+" "+j+" "+ (float)sim);
 //            }
 //        }
-        PrintWriter writer = new PrintWriter("StringNum.edges", "UTF-8");        
+        PrintWriter writer = new PrintWriter("StringNum60_uw.edges", "UTF-8");        
+        PrintWriter writer2 = new PrintWriter("StringNum60.edges", "UTF-8");
         for(int i =0;i < (allStrings.size());i++){
             for(int j = i; j<(allStrings.size());j++){
                 double sim = cs1.CosineSimilarity_Score(allStrings.get(i), allStrings.get(j));
                 sim = sim*100;
                 int num = (int) sim;
-                if((i != j)&&(sim != 0)&&(!Double.isNaN(sim))&&(num != 0))
-                    writer.println(i+" "+j+" "+ num);
+                if((i != j)&&(sim != 0)&&(!Double.isNaN(sim))&&(num > 60)&&(num<90)){
+                    writer.println(i+" "+j);
+                    writer2.println(i+" "+j+" "+ num);
                     //writer.println(i+" "+j+" "+ (float)sim);
+                }    
             }
         }        
         writer.close();
