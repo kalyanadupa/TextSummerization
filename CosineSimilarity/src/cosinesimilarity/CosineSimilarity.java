@@ -147,7 +147,7 @@ public class CosineSimilarity {
         List<String> allStrings = new ArrayList<String>();
         //BufferedReader in = new BufferedReader(new FileReader("N05-1042.list"));
         PrintWriter out = new PrintWriter("String.nodes", "UTF-8");
-        File[] allfiles = new File("D1401_TRAIN").listFiles();
+        File[] allfiles = new File("new").listFiles();
         BufferedReader in = null;
         int idx = 0;
         String s = null;
@@ -184,18 +184,21 @@ public class CosineSimilarity {
 //                    //writer.println(i+" "+j+" "+ (float)sim);
 //            }
 //        }
-        PrintWriter writer = new PrintWriter("StringNum60_uw.edges", "UTF-8");        
-        PrintWriter writer2 = new PrintWriter("StringNum60.edges", "UTF-8");
+        PrintWriter writer = new PrintWriter("StringPB20.edges", "UTF-8");        
+        //PrintWriter writer2 = new PrintWriter("StringNum60.edges", "UTF-8");
         for(int i =0;i < (allStrings.size());i++){
             for(int j = i; j<(allStrings.size());j++){
                 double sim = cs1.CosineSimilarity_Score(allStrings.get(i), allStrings.get(j));
-                sim = sim*100;
-                int num = (int) sim;
-                if((i != j)&&(sim != 0)&&(!Double.isNaN(sim))&&(num > 60)&&(num<90)){
-                    writer.println(i+" "+j);
-                    writer2.println(i+" "+j+" "+ num);
+                //sim = sim*100;
+                //int num = (int) sim;
+                if((i != j)&&(sim != 0)&&(!Double.isNaN(sim))&&(sim > 0.2)){
+                    writer.println(i+" "+j+" "+sim);
+                    //writer2.println(i+" "+j+" "+ num);
                     //writer.println(i+" "+j+" "+ (float)sim);
-                }    
+                }
+                else
+                    writer.println(i+" "+j+" "+sim);
+                      
             }
         }        
         writer.close();
